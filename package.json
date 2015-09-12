@@ -1,7 +1,7 @@
 {
-  "name": "webscrapper",
+  "name": "webscraper",
   "version": "0.0.1",
-  "description": "Web Scrapping module",
+  "description": "Web Scrpping module",
   "main": "index.js",
   "dependencies": {
     "browser": "^0.2.6",

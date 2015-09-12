@@ -1,6 +1,6 @@
 (function(){
-    var scrapper = {};
-    exports.runScrapping = scrapper.runScrapping = function(){
+    var scraper = {};
+    exports.scrapeData = scrapper.scrapeData = function(){
         //your logic
         var request = require('request');
         var cheerio = require('cheerio');
@@ -15,6 +15,6 @@
     };
 
     if (!module.parent) {
-        scrapper.runScrapping(process.argv[2]);
+        scrapper.scrapeData(process.argv[2]);
     }
 })();
