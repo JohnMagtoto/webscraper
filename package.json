@@ -1,0 +1,18 @@
+{
+  "name": "webscrapper",
+  "version": "0.0.1",
+  "description": "Web Scrapping module",
+  "main": "index.js",
+  "dependencies": {
+    "browser": "^0.2.6",
+    "cheerio": "latest",
+    "jsdom": "^6.3.0",
+    "request": "latest"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "John Magtoto, Kevin Lumanlan, Jo-Ries Canino",
+  "license": "MIT"
+}
