@@ -2,8 +2,9 @@
   "name": "webscraper",
   "version": "0.0.1",
   "description": "Web Scrpping module",
-  "main": "index.js",
+  "main": "main.js",
   "dependencies": {
+    "bone-scrapping": "0.0.6",
     "browser": "^0.2.6",
     "cheerio": "latest",
     "jsdom": "^6.3.0",
