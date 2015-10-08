@@ -5,47 +5,43 @@ function webscrape() {
   var cheerio = require('cheerio');
 
   return {
-    scrapULItemsText:scrapULItemsText
+    startScrappingText:startScrappingText
   } ;
 
   /*
-  Function that retrieves elements within the UL tag.
-    Parameters:
-    url       = the url to search
-    parameter = a css selector search chain.
-    Returns:
-    promise containing the resolution of items within the page body or exception
+  Function that retrieves text within the specified element
+    Parameters
+    url       :  the url to search
+    parameter :  a css selector search chain.
+
+    Returns
+    The promise containing the resolution of items within the page body or exception
   */
-  function scrapULItemsText(url, pattern) {
+  function startScrappingText(url, pattern) {
     pattern = pattern.toLowerCase();
     return new Promise( function(resolve, reject){
-      if (pattern.indexOf("ul") > -1){
-        var listItems = [];
-        request(url, function(error, response, body){
-          if (!error && response.statusCode == 200) {
-            var $ = cheerio.load(body) ;
-            var elements = $(pattern) ;
-            for (var i=0; i<elements.length; i++){
-              listItems.push($(elements[i]).text()) ;
-            }
-            resolve(listItems);
+      var listItems = [];
+      request(url, function(error, response, body){
+        if (!error && response.statusCode == 200) {
+          var $ = cheerio.load(body) ;
+          var elements = $(pattern) ;
+          for (var i=0; i<elements.length; i++){
+            listItems.push($(elements[i]).text()) ;
           }
-        })
-      }
-      else {
-        reject("Exception: Parameter pattern does not contain a UL tag.");
-      }
+          resolve(listItems);
+        }
+        else {
+          reject(error);
+        }
+      })
     })
   }
 
-
+  function scrap
 }
 
 // test calls
 webscrape()
-  .scrapULItemsText('http://wikipedia.org/wiki/October_8', 'div#mw-content-text > h2 + ul:nth-of-type(2) > li')
+  .startScrappingText('http://wikipedia.org/wiki/October_8', 'div#mw-content-text > h2 + div:nth-of-type(2) > li')
   .then(function(result){ console.log(result); })
-  .catch(function(error){ console.log(error); });
-// webscrape().scrapULItems('http://www.mangafox.me', 'ul#updates > li > div > h3 a') ;
-// var a = webscrape().scrapULItemsText('http://wikipedia.org/wiki/October_8', 'div#mw-content-text > h2 + ul:nth-of-type(2) > li');
-// console.log(a);
+  .catch(function(error){ console.error(error); });
