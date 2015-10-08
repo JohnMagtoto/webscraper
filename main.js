@@ -1,46 +1,51 @@
-(function(){
-    var scraper = {};
-    exports.scrapeData = scraper.scrapeData = function(){
-        //your logic
-        var request = require('request');
-        var cheerio = require('cheerio');
-        var nazarik = require('bone-scrapping')({
-          login_name:"ctl00$ContentPlaceHolder1$txtuserid",
-          password_name:"ctl00$ContentPlaceHolder1$txtpassid",
-          username_value: "8558997795",
-          password_value: "Sanjeev1",
-          login_url : "https://www.statebankrewardz.com/memberlogin.aspx",
-          url_to_scrap : "https://www.statebankrewardz.com/MyAccount.aspx",
-          form_row : 0
-        });
+module.exports = webscrape ;
 
-        // var credentials = {
-        // 	username: '8558997795',
-        // 	password: 'Sanjeev1'
-        // };
-        // console.log(nazarik) ;
-        nazarik.then(function(res){
-          console.log(res) ;
-        }) ;
+function webscrape() {
+  var request = require('request');
+  var cheerio = require('cheerio');
 
-        // request
-        //   .post({
-        //     uri : "https://www.statebankrewardz.com/memberlogin.aspx",
-        //     headers : {'content-type': 'application/x-www-form-urlencoded'},
-        //     body : require("querystring").stringify(credentials)
-        //   }, function(err, res, body){
-        //     if (err){
-        //       callback.call(null, new Error('Login failed'));
-		    //       return;
-        //     }
-        //     console.log(body) ;
-        //     console.log("\n\n\n\n")
-        //     console.log(res) ;
-        //   })
+  return {
+    scrapULItemsText:scrapULItemsText
+  } ;
 
-    };
+  /*
+  Function that retrieves elements within the UL tag.
+    Parameters:
+    url       = the url to search
+    parameter = a css selector search chain.
+    Returns:
+    promise containing the resolution of items within the page body or exception
+  */
+  function scrapULItemsText(url, pattern) {
+    pattern = pattern.toLowerCase();
+    return new Promise( function(resolve, reject){
+      if (pattern.indexOf("ul") > -1){
+        var listItems = [];
+        request(url, function(error, response, body){
+          if (!error && response.statusCode == 200) {
+            var $ = cheerio.load(body) ;
+            var elements = $(pattern) ;
+            for (var i=0; i<elements.length; i++){
+              listItems.push($(elements[i]).text()) ;
+            }
+            resolve(listItems);
+          }
+        })
+      }
+      else {
+        reject("Exception: Parameter pattern does not contain a UL tag.");
+      }
+    })
+  }
 
-    if (!module.parent) {
-        scraper.scrapeData(process.argv[2]);
-    }
-})();
+
+}
+
+// test calls
+webscrape()
+  .scrapULItemsText('http://wikipedia.org/wiki/October_8', 'div#mw-content-text > h2 + ul:nth-of-type(2) > li')
+  .then(function(result){ console.log(result); })
+  .catch(function(error){ console.log(error); });
+// webscrape().scrapULItems('http://www.mangafox.me', 'ul#updates > li > div > h3 a') ;
+// var a = webscrape().scrapULItemsText('http://wikipedia.org/wiki/October_8', 'div#mw-content-text > h2 + ul:nth-of-type(2) > li');
+// console.log(a);
